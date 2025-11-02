@@ -28,6 +28,7 @@
     "react-dom": "19.2.0",
     "react-redux": "^9.2.0",
     "yup": "^1.7.1"
+
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

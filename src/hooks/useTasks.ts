@@ -31,6 +31,7 @@ export function useTasks(column: string, search = "") {
     if (search) params.set("q", search);
 
     const res = await api.get<Task[]>(`/tasks?${params.toString()}`);
+    console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
     const total = Number(res.headers["x-total-count"] || 0);
 
     return {

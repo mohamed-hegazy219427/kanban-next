@@ -1,12 +1,17 @@
 // app/page.tsx
 "use client";
 
+import { Suspense } from "react";
 import KanbanBoard from "../components/KanbanBoard";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-linear-to-bl from-gray-50 via-blue-50 to-indigo-50">
-      <KanbanBoard />
-    </main>
+    <Suspense
+      fallback={<div className="p-6 text-center">Loading board...</div>}
+    >
+      <main className="min-h-screen bg-gray-50">
+        <KanbanBoard />
+      </main>
+    </Suspense>
   );
 }

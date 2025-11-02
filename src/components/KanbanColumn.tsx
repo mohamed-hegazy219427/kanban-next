@@ -14,6 +14,7 @@ import { Button, CircularProgress, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CreateTaskDialog from "./CreateTaskDialog";
 import EditTaskDialog from "./EditTaskDialog";
+import ConfirmDialog from "./ConfirmDialog";
 
 interface Props {
   column: "backlog" | "in-progress" | "review" | "done";
@@ -45,6 +46,11 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
 
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+
+  // keep your existing delete handler, but trigger confirm
+ 
   const [editTask, setEditTask] = useState<Task | null>(null);
 
   const { setNodeRef, isOver } = useDroppable({ id: column });
@@ -81,11 +87,21 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     setOpenEdit(false);
   };
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this task?")) {
-      await deleteTask.mutateAsync(id);
-    }
-  };
+
+   const askDelete = async (task: Task) => {
+     setTaskToDelete(task);
+     setOpenConfirm(true);
+    //  await deleteTask.mutateAsync(task.id);
+
+   };
+
+   const handleConfirmDelete = async () => {
+     if (!taskToDelete) return;
+     await deleteTask.mutateAsync(taskToDelete.id);
+     setOpenConfirm(false);
+     setTaskToDelete(null);
+   };
+  
 
   if (isLoading) return <div className="p-4 text-center">Loading...</div>;
   if (isError)
@@ -112,7 +128,7 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
             key={task.id}
             task={task}
             onEdit={() => handleEditOpen(task)}
-            onDelete={() => handleDelete(task.id)}
+            onDelete={() => askDelete(task)}
           />
         ))}
       </div>
@@ -144,6 +160,22 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
         onClose={() => setOpenEdit(false)}
         task={editTask}
         onEdit={handleEditSave}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={openConfirm}
+        title="Delete Task"
+        message={
+          taskToDelete
+            ? `Are you sure you want to delete the task "${taskToDelete.title}"? This action cannot be undone.`
+            : "Delete this task?"
+        }
+        onCancel={() => {
+          setOpenConfirm(false);
+          setTaskToDelete(null);
+        }}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   );

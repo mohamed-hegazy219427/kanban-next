@@ -1,7 +1,14 @@
 "use client";
 
 import { useDraggable } from "@dnd-kit/core";
-import { Card, CardContent, IconButton, Typography } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Card,
+  CardContent,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Task } from "@/hooks/useTasks";
@@ -56,6 +63,28 @@ export default function TaskCard({ task, onEdit, onDelete }: Props) {
             {task.description}
           </Typography>
         )}
+
+        <Box className="flex justify-between items-center mt-2 px-4 gap-4">
+          {task.assignee && (
+            <Badge
+              badgeContent={"@" + task.assignee}
+              color="info"
+             
+              anchorOrigin={{ vertical: "top", horizontal: "left" }}
+              className=" rounded-full text-sm font-semibold text-amber-200 flex items-center"
+            />
+          )}
+
+          {task.priority && (
+            <Badge
+              badgeContent={task.priority}
+              color="warning"
+             
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              className="rounded-full text-sm font-semibold text-amber-200 "
+            />
+          )}
+        </Box>
       </CardContent>
     </Card>
   );

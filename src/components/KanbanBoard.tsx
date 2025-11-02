@@ -13,9 +13,9 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { Task, useUpdateTask } from "@/hooks/useTasks";
-import KanbanColumn from "../KanbanColumn";
-import TaskCard from "../TaskCard";
-import SearchBar from "../SearchBar";
+import KanbanColumn from "./KanbanColumn";
+import TaskCard from "./TaskCard";
+import SearchBar from "./SearchBar";
 import { useSearchQuery } from "@/hooks/useSearchQuery";
 
 export default function KanbanBoard() {
@@ -82,20 +82,20 @@ export default function KanbanBoard() {
         <SearchBar />
 
         <Grid container spacing={3} className="mt-2">
-          <Grid  size={{xs: 12, sm: 6, md: 3}}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <KanbanColumn column="backlog" title="📝 Backlog" search={search} />
           </Grid>
-          <Grid  size={{xs: 12, sm: 6, md: 3}}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <KanbanColumn
               column="in-progress"
               title="🚀 In Progress"
               search={search}
             />
           </Grid>
-          <Grid  size={{xs: 12, sm: 6, md: 3}}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <KanbanColumn column="review" title="👀 Review" search={search} />
           </Grid>
-          <Grid  size={{xs: 12, sm: 6, md: 3}}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <KanbanColumn column="done" title="✅ Done" search={search} />
           </Grid>
         </Grid>

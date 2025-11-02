@@ -9,19 +9,11 @@ import {
   useDeleteTask,
   Task,
 } from "@/hooks/useTasks";
-import TaskCard from "../TaskCard";
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-} from "@mui/material";
+import TaskCard from "./TaskCard";
+import { Button, CircularProgress, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
+import CreateTaskDialog from "./CreateTaskDialog";
+import EditTaskDialog from "./EditTaskDialog";
 
 interface Props {
   column: "backlog" | "in-progress" | "review" | "done";
@@ -45,7 +37,6 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     isLoading,
     isError,
   } = useTasks(column, search);
-
   const tasks = data?.pages.flatMap((p) => p.items) ?? [];
 
   const createTask = useCreateTask();
@@ -55,34 +46,36 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
-  const [form, setForm] = useState({ title: "", description: "" });
 
   const { setNodeRef, isOver } = useDroppable({ id: column });
   const highlight = isOver ? "#D1E9FF" : columnColors[column];
 
-  const handleCreate = async () => {
-    if (!form.title.trim()) return alert("Task title is required!");
+  const handleCreate = async (payload: {
+    title: string;
+    description: string;
+  }) => {
     await createTask.mutateAsync({
-      title: form.title,
-      description: form.description,
+      title: payload.title,
+      description: payload.description,
       column,
       createdAt: new Date().toISOString(),
     });
-    setOpenCreate(false);
   };
 
   const handleEditOpen = (task: Task) => {
     setEditTask(task);
-    setForm({ title: task.title, description: task.description || "" });
     setOpenEdit(true);
   };
 
-  const handleEditSave = async () => {
+  const handleEditSave = async (payload: {
+    title: string;
+    description: string;
+  }) => {
     if (!editTask) return;
     await updateTask.mutateAsync({
       ...editTask,
-      title: form.title,
-      description: form.description,
+      title: payload.title,
+      description: payload.description,
       updatedAt: new Date().toISOString(),
     });
     setOpenEdit(false);
@@ -139,76 +132,19 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
       </div>
 
       {/* Create Dialog */}
-      <Dialog open={openCreate} onClose={() => setOpenCreate(false)}>
-        <DialogTitle>
-          Create Task
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpenCreate(false)}
-            sx={{ position: "absolute", right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent className="flex flex-col gap-3 mt-2">
-          <TextField
-            label="Title"
-            fullWidth
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-          />
-          <TextField
-            label="Description"
-            fullWidth
-            multiline
-            minRows={2}
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenCreate(false)}>Cancel</Button>
-          <Button onClick={handleCreate} variant="contained">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <CreateTaskDialog
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
+        onCreate={handleCreate}
+      />
 
       {/* Edit Dialog */}
-      <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
-        <DialogTitle>
-          Edit Task
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpenEdit(false)}
-            sx={{ position: "absolute", right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent className="flex flex-col gap-3 mt-2">
-          <TextField
-            label="Title"
-            fullWidth
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-          />
-          <TextField
-            label="Description"
-            fullWidth
-            multiline
-            minRows={2}
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenEdit(false)}>Cancel</Button>
-          <Button onClick={handleEditSave} variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <EditTaskDialog
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        task={editTask}
+        onEdit={handleEditSave}
+      />
     </div>
   );
 }

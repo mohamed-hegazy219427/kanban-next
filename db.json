@@ -1,0 +1,169 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Design homepage",
+      "description": "Include hero section and responsive layout",
+      "column": "done",
+      "priority": "high",
+      "assignee": "Ali",
+      "createdAt": "2025-10-30T09:00:00Z",
+      "updatedAt": "2025-11-02T09:53:10.738Z",
+      "progress": 0.3
+    },
+    {
+      "id": "2",
+      "title": "Auth flow",
+      "description": "Implement sign in, sign up, and password reset",
+      "column": "in-progress",
+      "priority": "high",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-29T11:00:00Z",
+      "updatedAt": "2025-11-02T09:37:25.155Z",
+      "progress": 0.9
+    },
+    {
+      "id": "3",
+      "title": "PR review",
+      "description": "Check tests and code style before merging",
+      "column": "review",
+      "priority": "medium",
+      "assignee": "Sara",
+      "createdAt": "2025-10-28T10:00:00Z",
+      "updatedAt": "2025-11-02T09:43:46.011Z",
+      "progress": 0.6
+    },
+    {
+      "id": "4",
+      "title": "Deploy to prod",
+      "description": "Deploy final version to Vercel",
+      "column": "done",
+      "priority": "medium",
+      "assignee": "Khaled",
+      "createdAt": "2025-10-25T08:00:00Z",
+      "updatedAt": "2025-11-02T09:53:16.762Z",
+      "progress": 0.7
+    },
+    {
+      "id": "5",
+      "title": "Set up database",
+      "description": "Configure PostgreSQL and Prisma models",
+      "column": "in-progress",
+      "priority": "high",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T09:30:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    },
+    {
+      "id": "6",
+      "title": "Implement search",
+      "description": "Add search functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Ali",
+      "createdAt": "2025-10-29T14:00:00Z",
+      "updatedAt": "2025-11-02T09:41:45.787Z",
+      "progress": 0.8
+    },
+    {
+      "id": "7",
+      "title": "Write unit tests",
+      "description": "Cover core components with Jest + RTL",
+      "column": "in-progress",
+      "priority": "high",
+      "assignee": "Sara",
+      "createdAt": "2025-10-28T12:30:00Z",
+      "updatedAt": "2025-11-02T09:53:18.602Z",
+      "progress": 0.9
+    },
+    {
+      "id": "8",
+      "title": "Optimize images",
+      "description": "Compress for web and use Next/Image",
+      "column": "review",
+      "priority": "low",
+      "assignee": "Omar",
+      "createdAt": "2025-10-24T09:30:00Z",
+      "updatedAt": "2025-11-02T09:41:37.435Z",
+      "progress": 0.1
+    },
+    {
+      "id": "9",
+      "title": "Create user profiles",
+      "description": "Design profile page with editable bio",
+      "column": "in-progress",
+      "priority": "medium",
+      "assignee": "Fatma",
+      "createdAt": "2025-10-26T11:00:00Z",
+      "updatedAt": "2025-11-02T09:53:20.785Z",
+      "progress": 0.7
+    },
+    {
+      "id": "10",
+      "title": "Add sorting",
+      "description": "Add sorting functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    },
+    {
+      "id": "11",
+      "title": "Add filtering",
+      "description": "Add filtering functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    },
+    {
+      "id": "12",
+      "title": "Add drag and drop",
+      "description": "Add drag and drop functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    },
+    {
+      "id": "13",
+      "title": "Add sorting to tasks",
+      "description": "Add sorting functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    },
+    {
+      "id": "14",
+      "title": "Add filtering to tasks",
+      "description": "Add filtering functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    },
+    {
+      "id": "15",
+      "title": "Add drag and drop to tasks",
+      "description": "Add drag and drop functionality to tasks board",
+      "column": "backlog",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z",
+      "progress": 0.8
+    }
+  ]
+}

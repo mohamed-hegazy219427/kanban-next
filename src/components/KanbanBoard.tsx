@@ -62,7 +62,7 @@ export default function KanbanBoard() {
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveTask(null)}
     >
-      <Container maxWidth="xl" className="py-6">
+      <Container  maxWidth={"xl"} className="py-6">
         <Paper
           elevation={0}
           className="mb-6 p-4 bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl"

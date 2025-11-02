@@ -23,10 +23,10 @@ interface Props {
 }
 
 const columnColors: Record<Props["column"], string> = {
-  backlog: "#F9FAFB",
-  "in-progress": "#FEF3C7",
-  review: "#E0F2FE",
-  done: "#DCFCE7",
+  backlog: "#66D9EF",
+  "in-progress": "#FFC107",
+  review: "#FF9900",
+  done: "#00E676",
 };
 
 export default function KanbanColumn({ column, title, search = "" }: Props) {

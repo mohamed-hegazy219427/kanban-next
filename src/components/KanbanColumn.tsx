@@ -36,8 +36,9 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
 
   const tasks = useMemo(
     () =>
-      data?.pages.flatMap((p: { items: Task[] }) => p.items).filter(Boolean) ??
-      [],
+      data?.pages
+        ?.flatMap((p: any) => (Array.isArray(p?.items) ? p.items : []))
+        .filter(Boolean) ?? [],
     [data],
   );
 

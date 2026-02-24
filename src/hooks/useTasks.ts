@@ -13,19 +13,55 @@ const PAGE_SIZE = 10;
 
 export function useTasks(column: string, search = "") {
   const fetcher = async ({ pageParam = 1 }: { pageParam?: number }) => {
+    // Determine which pagination param to use.
+    // my-json-server and older json-server use _limit, v1.x uses _per_page.
     const params = new URLSearchParams({
       _page: String(pageParam),
       _per_page: String(PAGE_SIZE),
+      _limit: String(PAGE_SIZE),
       _sort: "order",
       column,
     });
 
-    // json-server 1.0.0-beta.3 returns { data: Task[], items: number, ... }
-    const res = await api.get<{ data: Task[]; items: number }>(
-      `/tasks?${params.toString()}`,
-    );
+    const res = await api.get<any>(`/tasks?${params.toString()}`);
 
-    const { data: items, items: total } = res.data;
+    // CRITICAL: Log response to help identify structure in production
+    console.log(`[useTasks] Response for ${column}:`, {
+      status: res.status,
+      isObject: typeof res.data === "object" && res.data !== null,
+      isArray: Array.isArray(res.data),
+      hasDataProp: res.data && "data" in res.data,
+      data: res.data,
+    });
+
+    let items: Task[] = [];
+    let total = 0;
+
+    // Format A: { data: Task[], items: number } (json-server v1.x or user's provided sample)
+    if (
+      res.data &&
+      typeof res.data === "object" &&
+      "data" in res.data &&
+      Array.isArray(res.data.data)
+    ) {
+      items = res.data.data;
+      total = res.data.items || res.data.total || items.length;
+    }
+    // Format B: Task[] (Standard REST / older json-server / my-json-server)
+    else if (Array.isArray(res.data)) {
+      items = res.data;
+      const totalCountHeader = res.headers["x-total-count"];
+      total = totalCountHeader ? parseInt(totalCountHeader, 10) : items.length;
+    }
+    // Fallback: Unexpected format
+    else {
+      console.error(
+        `[useTasks] Unexpected API response format for ${column}:`,
+        res.data,
+      );
+      items = [];
+      total = 0;
+    }
 
     return {
       items,

@@ -1,9 +1,8 @@
 "use client";
 
-import { Modal } from "@mui/base/Modal";
 import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 type Values = {
   title: string;
@@ -23,19 +22,6 @@ const validationSchema = Yup.object({
   description: Yup.string(),
 });
 
-const Backdrop = React.forwardRef<
-  HTMLDivElement,
-  { open: boolean; className?: string }
->(function Backdrop({ open, className, ...other }, ref) {
-  return (
-    <div
-      ref={ref}
-      className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity z-[-1] ${open ? "opacity-100" : "opacity-0"} ${className ?? ""}`}
-      {...other}
-    />
-  );
-});
-
 export default function TaskFormDialog({
   open,
   onClose,
@@ -43,6 +29,19 @@ export default function TaskFormDialog({
   onSubmit,
   title,
 }: TaskFormDialogProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (open && !dialog.open) {
+      dialog.showModal();
+    } else if (!open && dialog.open) {
+      dialog.close();
+    }
+  }, [open]);
+
   const initialValues: Values = {
     title: initial?.title ?? "",
     description: initial?.description ?? "",
@@ -57,13 +56,12 @@ export default function TaskFormDialog({
   };
 
   return (
-    <Modal
-      open={open}
+    <dialog
+      ref={dialogRef}
       onClose={onClose}
-      slots={{ backdrop: Backdrop }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="modal modal-bottom sm:modal-middle bg-transparent backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
-      <ModalContent className="modal-box! w-full max-w-2xl p-0 bg-base-200 border border-base-content/10 shadow-2xl rounded-[2.5rem] overflow-hidden focus:outline-none">
+      <div className="modal-box w-full max-w-2xl p-0 bg-base-200 border border-base-content/10 shadow-2xl rounded-[2.5rem] overflow-hidden">
         {/* Header */}
         <div className="flex justify-between items-center bg-base-100 px-10 py-8 border-b border-base-content/10">
           <h2 className="text-3xl font-black text-base-content tracking-tighter">
@@ -74,7 +72,6 @@ export default function TaskFormDialog({
             onClick={onClose}
             className="btn btn-ghost btn-circle hover:bg-base-content/10 transition-colors"
           >
-            {/* Close Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -170,14 +167,7 @@ export default function TaskFormDialog({
             </Form>
           )}
         </Formik>
-      </ModalContent>
-    </Modal>
+      </div>
+    </dialog>
   );
 }
-
-const ModalContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function ModalContent(props, ref) {
-  return <div ref={ref} {...props} />;
-});

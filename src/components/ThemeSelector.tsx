@@ -80,7 +80,7 @@ export default function ThemeSelector() {
       </button>
       <ul
         tabIndex={0}
-        className="dropdown-content z-[100] p-3 shadow-2xl bg-base-100/95 backdrop-blur-xl rounded-3xl w-64 max-h-96 overflow-y-auto border border-base-300 mt-2 scrollbar-hide"
+        className="dropdown-content z-100 p-3 shadow-2xl bg-base-100/95 backdrop-blur-xl rounded-3xl w-64 max-h-96 overflow-y-auto border border-base-300 mt-2 scrollbar-hide"
       >
         <li className="px-4 py-3 mb-2 border-b border-base-200">
           <span className="text-[10px] font-base-content uppercase tracking-[0.3em] opacity-40">

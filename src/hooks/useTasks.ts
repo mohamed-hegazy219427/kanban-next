@@ -43,14 +43,14 @@ export function useTasks(column: string, search = "") {
 
   // Client-side filtering by title (json-server beta doesn't support server-side search with pagination)
   const filteredData = useMemo(() => {
-    if (!query.data || !search) return query.data;
+    if (!query.data?.pages || !search) return query.data;
     const lowerSearch = search.toLowerCase();
     return {
       ...query.data,
       pages: query.data.pages.map((page) => ({
         ...page,
-        items: page.items.filter((task) =>
-          task.title.toLowerCase().includes(lowerSearch),
+        items: (page.items || []).filter((task) =>
+          task?.title?.toLowerCase().includes(lowerSearch),
         ),
       })),
     };

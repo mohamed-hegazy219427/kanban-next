@@ -35,7 +35,9 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   } = useTasks(column, search);
 
   const tasks = useMemo(
-    () => data?.pages.flatMap((p: { items: Task[] }) => p.items) ?? [],
+    () =>
+      data?.pages.flatMap((p: { items: Task[] }) => p.items).filter(Boolean) ??
+      [],
     [data],
   );
 
@@ -127,8 +129,18 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     if (isLoading) {
       return (
         <div className="space-y-4">
+          <div className="flex justify-center p-4">
+            <span className="loading loading-spinner loading-lg text-primary opacity-20"></span>
+          </div>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="skeleton h-32 w-full rounded-xl" />
+            <div
+              key={i}
+              className="card bg-base-100 shadow p-5 gap-3 border border-base-200"
+            >
+              <div className="skeleton h-4 w-20 rounded"></div>
+              <div className="skeleton h-6 w-full rounded"></div>
+              <div className="skeleton h-4 w-3/4 rounded"></div>
+            </div>
           ))}
         </div>
       );
@@ -136,14 +148,17 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
 
     return (
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-        {tasks.map((task: Task) => (
-          <TaskCard
-            key={`task-${task.id}`}
-            task={task}
-            onEdit={() => handleEditOpen(task)}
-            onDelete={() => askDelete(task)}
-          />
-        ))}
+        {tasks.map(
+          (task: Task) =>
+            task?.id && (
+              <TaskCard
+                key={`task-${task.id}`}
+                task={task}
+                onEdit={() => handleEditOpen(task)}
+                onDelete={() => askDelete(task)}
+              />
+            ),
+        )}
       </SortableContext>
     );
   };

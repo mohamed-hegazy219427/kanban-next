@@ -8,8 +8,11 @@ export default function HomePage() {
   return (
     <Suspense
       fallback={
-        <div className="p-6 text-center font-bold text-base-content opacity-50">
-          Loading board...
+        <div className="min-h-screen bg-base-100 flex flex-col items-center justify-center gap-4">
+          <span className="loading loading-spinner loading-lg text-primary"></span>
+          <p className="text-sm font-black uppercase tracking-[0.3em] opacity-20">
+            Initializing Board
+          </p>
         </div>
       }
     >

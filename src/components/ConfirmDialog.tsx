@@ -36,7 +36,7 @@ export default function ConfirmDialog({
       onClose={onCancel}
       className="modal modal-bottom sm:modal-middle bg-transparent backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
-      <div className="modal-box w-full max-w-md p-0 bg-base-200 rounded-[2rem] shadow-2xl border border-base-content/5 overflow-hidden flex flex-col gap-4">
+      <div className="modal-box w-full max-w-md p-0 bg-base-200 rounded-4xl shadow-2xl border border-base-content/5 overflow-hidden flex flex-col gap-4">
         {/* Header */}
         <div className="flex justify-between items-center bg-base-100 px-8 py-6 border-b border-base-content/10">
           <h2 className="text-2xl font-black text-base-content tracking-tighter">

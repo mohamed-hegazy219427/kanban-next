@@ -14,15 +14,6 @@ import {
 } from "@/hooks/useTasks";
 import { Task } from "@/types";
 import TaskCard from "./TaskCard";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import CreateTaskDialog from "./CreateTaskDialog";
 import EditTaskDialog from "./EditTaskDialog";
 import ConfirmDialog from "./ConfirmDialog";
@@ -43,7 +34,6 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     isError,
   } = useTasks(column, search);
 
-  // Flatten tasks from infinite query pages
   const tasks = useMemo(
     () => data?.pages.flatMap((p) => p.items) ?? [],
     [data],
@@ -108,7 +98,7 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
 
   if (isError)
     return (
-      <Box className="alert alert-error shadow-lg rounded-2xl flex flex-col items-center text-center p-8">
+      <div className="alert alert-error shadow-lg rounded-2xl flex flex-col items-center text-center p-8">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="stroke-current shrink-0 h-8 w-8 mb-2"
@@ -123,13 +113,13 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
           />
         </svg>
         <span className="font-bold">Error loading tasks</span>
-        <Button
+        <button
           className="btn btn-sm btn-outline mt-4"
           onClick={() => window.location.reload()}
         >
           Retry
-        </Button>
-      </Box>
+        </button>
+      </div>
     );
 
   const renderContent = () => {
@@ -137,11 +127,7 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
       return (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <Skeleton
-              key={i}
-              variant="rectangular"
-              className="skeleton h-32 w-full rounded-xl"
-            />
+            <div key={i} className="skeleton h-32 w-full rounded-xl" />
           ))}
         </div>
       );
@@ -177,39 +163,48 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   };
 
   return (
-    <Box
+    <div
       ref={setNodeRef}
       className={`flex flex-col h-full rounded-2xl bg-base-200/40 border-t-4 ${getHeaderColorClass()} shadow-sm transition-all duration-300 ${isOver ? "bg-base-300/60 ring-2 ring-primary/20" : ""}`}
     >
       <div className="flex justify-between items-center p-6 pb-4">
         <div className="flex items-center gap-3">
-          <Typography
-            component="h2"
-            className="font-black text-xl text-base-content tracking-tight flex items-center gap-2 m-0 p-0"
-          >
+          <h2 className="font-black text-xl text-base-content tracking-tight flex items-center gap-2 m-0 p-0">
             {title}
             <div className="badge badge-neutral badge-sm font-bold opacity-70">
               {tasks.length}
             </div>
-          </Typography>
+          </h2>
         </div>
-        <IconButton
+        <button
           onClick={() => setOpenCreate(true)}
-          className="btn btn-circle btn-xs btn-primary shadow-md hover:scale-110 transition-transform p-0!"
-          sx={{ minWidth: 24, padding: 0 }}
+          className="btn btn-circle btn-xs btn-primary shadow-md hover:scale-110 transition-transform"
         >
-          <AddIcon sx={{ fontSize: 16 }} />
-        </IconButton>
+          {/* Add Icon */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={3}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-3.5 h-3.5"
+          >
+            <line x1="12" x2="12" y1="5" y2="19" />
+            <line x1="5" x2="19" y1="12" y2="12" />
+          </svg>
+        </button>
       </div>
 
       <div className="flex-1 px-4 pb-4 space-y-4 overflow-y-auto scrollbar-hide min-h-[300px]">
         {tasks.length === 0 && !isLoading ? (
-          <Box className="flex flex-col items-center justify-center p-12 opacity-20 text-center grayscale py-20">
+          <div className="flex flex-col items-center justify-center p-12 opacity-20 text-center grayscale py-20">
             <div className="w-16 h-16 border-4 border-dashed border-base-content rounded-full mb-4 animate-pulse"></div>
             <p className="text-xs font-black uppercase tracking-widest">
               No Tasks
             </p>
-          </Box>
+          </div>
         ) : (
           renderContent()
         )}
@@ -217,16 +212,16 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
 
       {hasNextPage && (
         <div className="p-4 pt-0 text-center">
-          <Button
+          <button
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
             className="btn btn-ghost btn-xs w-full text-primary font-bold hover:bg-primary/10"
           >
             {isFetchingNextPage ? (
-              <CircularProgress size={12} className="text-primary mr-2" />
+              <span className="loading loading-spinner loading-xs text-primary mr-2"></span>
             ) : null}
             LOAD MORE
-          </Button>
+          </button>
         </div>
       )}
 
@@ -257,6 +252,6 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
         }}
         onConfirm={handleConfirmDelete}
       />
-    </Box>
+    </div>
   );
 }

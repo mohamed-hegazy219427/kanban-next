@@ -2,9 +2,6 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card, CardContent, IconButton, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Task } from "@/types";
 import React from "react";
 
@@ -27,7 +24,7 @@ const TaskCard = React.memo(
     } = useSortable({
       id: String(task.id),
       data: task,
-      disabled: isOverlay, // Disable sortable logic if it's just a visual overlay
+      disabled: isOverlay,
     });
 
     const style = {
@@ -51,16 +48,15 @@ const TaskCard = React.memo(
     };
 
     return (
-      <Card
+      <div
         ref={setNodeRef}
         {...listeners}
         {...attributes}
         style={style}
-        elevation={0}
-        className={`card card-compact bg-base-100! shadow-lg hover:shadow-xl transition-all duration-300 border border-base-200 group ${isDragging ? "opacity-50 ring-4 ring-primary ring-inset" : ""} active:scale-95`}
+        className={`card card-compact bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 border border-base-200 group ${isDragging ? "opacity-50 ring-4 ring-primary ring-inset" : ""} active:scale-95`}
         aria-label={`Task: ${task.title}`}
       >
-        <CardContent className="card-body gap-4 p-5!">
+        <div className="card-body gap-4 p-5">
           <div className="flex justify-between items-start">
             <div
               className={`badge badge-sm font-black text-[9px] uppercase tracking-tighter ${getPriorityBadgeClass(task.priority)}`}
@@ -70,46 +66,67 @@ const TaskCard = React.memo(
 
             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
               {onEdit && (
-                <IconButton
-                  size="small"
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onEdit();
                   }}
                   className="btn btn-ghost btn-xs btn-square text-info hover:bg-info/10"
                 >
-                  <EditIcon sx={{ fontSize: 16 }} className="text-accent" />
-                </IconButton>
+                  {/* Edit Icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-4 h-4 text-accent"
+                  >
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                    <path d="m15 5 4 4" />
+                  </svg>
+                </button>
               )}
               {onDelete && (
-                <IconButton
-                  size="small"
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onDelete();
                   }}
                   className="btn btn-ghost btn-xs btn-square text-error hover:bg-error/10"
                 >
-                  <DeleteIcon sx={{ fontSize: 16 }} className="text-error"/>
-                </IconButton>
+                  {/* Delete Icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-4 h-4 text-error"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    <line x1="10" x2="10" y1="11" y2="17" />
+                    <line x1="14" x2="14" y1="11" y2="17" />
+                  </svg>
+                </button>
               )}
             </div>
           </div>
 
           <div>
-            <Typography
-              component="h3"
-              className="font-extrabold text-base text-base-content leading-tight p-0"
-            >
+            <h3 className="font-extrabold text-base text-base-content leading-tight">
               {task.title}
-            </Typography>
+            </h3>
             {task.description && (
-              <Typography
-                variant="body2"
-                className="text-base-content/50 text-xs line-clamp-2 mt-2 leading-relaxed font-medium"
-              >
+              <p className="text-base-content/50 text-xs line-clamp-2 mt-2 leading-relaxed font-medium">
                 {task.description}
-              </Typography>
+              </p>
             )}
           </div>
 
@@ -123,11 +140,11 @@ const TaskCard = React.memo(
           </div>
 
           <div className="flex items-center justify-between mt-1 pt-3 border-t border-base-content/5 text-[9px] text-base-content/30 font-black uppercase tracking-widest">
-            <Typography variant="caption" className="text-inherit font-inherit">
+            <span>
               {task.createdAt
                 ? new Date(task.createdAt).toLocaleDateString()
                 : ""}
-            </Typography>
+            </span>
             {task.updatedAt && (
               <span className="flex items-center gap-1 text-success lowercase italic">
                 <div className="w-1.5 h-1.5 rounded-full bg-success"></div>
@@ -135,8 +152,8 @@ const TaskCard = React.memo(
               </span>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   },
 );

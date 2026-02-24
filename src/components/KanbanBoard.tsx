@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Container, Box, Typography } from "@mui/material";
 import {
   DndContext,
   DragOverlay,
@@ -98,7 +97,6 @@ export default function KanbanBoard() {
 
     if (!targetColumn) return;
 
-    // If hovering over a different column, update position optimistically
     if (activeData.column !== targetColumn) {
       const newOrder =
         overData && "order" in overData ? (overData.order as number) : 0;
@@ -108,7 +106,6 @@ export default function KanbanBoard() {
         order: newOrder,
         updatedAt: new Date().toISOString(),
       });
-      // Update active data locally so subsequent over events know where it is now
       active.data.current.column = targetColumn;
     }
   };
@@ -122,35 +119,29 @@ export default function KanbanBoard() {
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveTask(null)}
     >
-      <Box className="min-h-screen bg-base-100/50">
-        <Container
-          maxWidth={false}
-          className="max-w-[1700px] mx-auto py-12 px-6 sm:px-10 lg:px-16"
-        >
+      <div className="min-h-screen bg-base-100/50">
+        <div className="max-w-[1700px] mx-auto py-12 px-6 sm:px-10 lg:px-16">
           <header className="mb-14 flex flex-col xl:flex-row xl:items-center justify-between gap-10">
             <div className="flex-1">
-              <Typography
-                component="h1"
-                className="text-6xl font-black text-base-content tracking-tighter mb-4 p-0"
-              >
+              <h1 className="text-6xl font-black text-base-content tracking-tighter mb-4">
                 Project{" "}
                 <span className="text-primary underline decoration-primary/20 underline-offset-8">
                   Board
                 </span>
-              </Typography>
-              <Typography className="text-base-content/50 text-xl max-w-2xl font-semibold leading-relaxed p-0">
+              </h1>
+              <p className="text-base-content/50 text-xl max-w-2xl font-semibold leading-relaxed">
                 High-performance task orchestration with DaisyUI themes and
                 persistent sorting precision.
-              </Typography>
+              </p>
             </div>
 
-            <Box className="flex flex-col md:flex-row items-center gap-4 bg-base-200 p-3 rounded-3xl shadow-inner border border-base-300">
+            <div className="flex flex-col md:flex-row items-center gap-4 bg-base-200 p-3 rounded-3xl shadow-inner border border-base-300">
               <div className="w-full md:w-96">
                 <SearchBar />
               </div>
               <div className="divider divider-horizontal hidden md:flex m-0 opacity-20"></div>
               <ThemeSelector />
-            </Box>
+            </div>
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
@@ -163,8 +154,8 @@ export default function KanbanBoard() {
             <KanbanColumn column="review" title="👀 Review" search={search} />
             <KanbanColumn column="done" title="✅ Done" search={search} />
           </div>
-        </Container>
-      </Box>
+        </div>
+      </div>
 
       <DragOverlay dropAnimation={null}>
         {activeTask ? (

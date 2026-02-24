@@ -19,7 +19,7 @@ export function useTasks(column: string, search = "") {
       column,
     });
 
-    if (search) params.set("q", search);
+    if (search) params.set("title_like", search);
 
     // json-server 1.0.0-beta.3 returns { data: Task[], items: number, ... }
     const res = await api.get<{ data: Task[]; items: number }>(

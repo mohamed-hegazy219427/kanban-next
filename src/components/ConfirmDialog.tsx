@@ -1,15 +1,7 @@
 "use client";
 
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Modal } from "@mui/base/Modal";
+import React from "react";
 
 type ConfirmDialogProps = {
   open: boolean;
@@ -19,6 +11,19 @@ type ConfirmDialogProps = {
   onCancel: () => void;
 };
 
+const Backdrop = React.forwardRef<
+  HTMLDivElement,
+  { open: boolean; className?: string }
+>(function Backdrop({ open, className, ...other }, ref) {
+  return (
+    <div
+      ref={ref}
+      className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity z-[-1] ${open ? "opacity-100" : "opacity-0"} ${className ?? ""}`}
+      {...other}
+    />
+  );
+});
+
 export default function ConfirmDialog({
   open,
   title = "Are you sure?",
@@ -27,57 +32,72 @@ export default function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   return (
-    <Dialog
+    <Modal
       open={open}
       onClose={onCancel}
-      fullWidth
-      maxWidth="xs"
-      slotProps={{
-        backdrop: {
-          className: "backdrop-blur-md bg-base-content/5",
-        },
-      }}
-      PaperProps={{
-        className:
-          "bg-base-100/95 backdrop-blur-3xl rounded-[2.5rem]! shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] border border-base-content/5 overflow-hidden",
-      }}
+      slots={{ backdrop: Backdrop }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
     >
-      <DialogTitle className="flex justify-between items-center border-b border-base-content/5 px-8 py-6">
-        <Typography
-          component="span"
-          className="text-2xl font-black text-base-content tracking-tighter"
-        >
-          {title}
-        </Typography>
-        <IconButton
-          aria-label="close"
-          onClick={onCancel}
-          className="btn btn-ghost btn-circle hover:bg-base-content/10 transition-colors"
-        >
-          <CloseIcon sx={{ fontSize: 20, opacity: 0.6 }} />
-        </IconButton>
-      </DialogTitle>
+      <ModalContent className="modal-box w-full max-w-md p-0 bg-base-200 rounded-[2rem] shadow-2xl border border-base-content/5 overflow-hidden flex flex-col gap-4 focus:outline-none">
+        {/* Header */}
+        <div className="flex justify-between items-center bg-base-100 px-8 py-6 border-b border-base-content/10">
+          <h2 className="text-2xl font-black text-base-content tracking-tighter">
+            {title}
+          </h2>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn btn-ghost btn-circle hover:bg-base-content/10 transition-colors"
+          >
+            {/* Close Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5 opacity-60"
+            >
+              <line x1="18" x2="6" y1="6" y2="18" />
+              <line x1="6" x2="18" y1="6" y2="18" />
+            </svg>
+          </button>
+        </div>
 
-      <DialogContent className="px-10 py-12 bg-transparent text-center">
-        <Typography className="text-base-content font-bold text-xl leading-relaxed">
-          {message}
-        </Typography>
-      </DialogContent>
+        {/* Content */}
+        <div className="px-10 py-6 bg-base-200 text-center">
+          <p className="text-base-content font-bold text-xl leading-relaxed">
+            {message}
+          </p>
+        </div>
 
-      <DialogActions className="px-8 py-8 gap-4 border-t border-base-content/5 backdrop-blur-md justify-center">
-        <Button
-          onClick={onCancel}
-          className="btn btn-ghost hover:bg-base-content/10 font-black uppercase text-[11px] tracking-[0.3em] px-8 transition-all text-base-content/50"
-        >
-          Discard
-        </Button>
-        <Button
-          onClick={onConfirm}
-          className="btn btn-error shadow-[0_20px_40px_-10px_rgba(var(--er),0.5)] font-black uppercase text-[11px] tracking-[0.3em] px-10 hover:scale-[1.02] active:scale-95 transition-all text-error-content"
-        >
-          Confirm Termination
-        </Button>
-      </DialogActions>
-    </Dialog>
+        {/* Actions */}
+        <div className="flex justify-center gap-4 px-8 py-10 bg-base-200 border-t border-base-content/10">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn btn-ghost hover:bg-base-content/20 font-black capitalize text-[11px] tracking-[0.4em] px-8 transition-all text-base-content/40 hover:text-base-content"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="btn btn-ghost hover:bg-base-content/20 font-black capitalize text-[11px] tracking-[0.4em] px-8 transition-all text-error"
+          >
+            Confirm
+          </button>
+        </div>
+      </ModalContent>
+    </Modal>
   );
 }
+
+const ModalContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function ModalContent(props, ref) {
+  return <div ref={ref} {...props} />;
+});

@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
 import TaskFormDialog from "./TaskFormDialog";
-import { Task } from "@/hooks/useTasks";
+import { Task } from "@/types";
 
 type EditTaskDialogProps = {
   open: boolean;

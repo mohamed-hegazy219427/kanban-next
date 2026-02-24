@@ -56,7 +56,8 @@ export function useCreateTask() {
 export function useUpdateTask() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (task: UpdateTaskPayload) => api.put(`/tasks/${task.id}`, task),
+    mutationFn: (task: UpdateTaskPayload) =>
+      api.patch(`/tasks/${task.id}`, task),
     onMutate: async (updatedTask) => {
       await qc.cancelQueries({ queryKey: ["tasks"] });
 
@@ -146,8 +147,22 @@ export function useUpdateTask() {
 
       return { previousData };
     },
-    onSuccess: () => {
-      // Invalidation happens silently in background for ultimate smoothness
+    onSuccess: (res) => {
+      // Reconcile with server data to ensure consistency (e.g. final order/updatedAt)
+      const serverTask = res.data;
+      qc.setQueriesData({ queryKey: ["tasks"] }, (oldData: any) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((item: Task) =>
+              item.id === serverTask.id ? { ...item, ...serverTask } : item,
+            ),
+          })),
+        };
+      });
+
       qc.invalidateQueries({ queryKey: ["tasks"], refetchType: "none" });
     },
     onError: (err, updatedTask, context) => {

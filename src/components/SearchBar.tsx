@@ -18,10 +18,10 @@ export default function SearchBar() {
         InputProps={{
           disableUnderline: true,
           className:
-            "input input-bordered w-full pr-12 bg-base-100 focus:input-primary transition-all rounded-[1.25rem] font-black h-14 border-2 shadow-sm group-v-focus-within:shadow-xl group-v-focus-within:shadow-primary/5 group-v-focus-within:ring-8 group-v-focus-within:ring-primary/5",
+            "input! input-bordered! w-full! pr-12 bg-base-100! focus:input-primary! focus:outline-offset-0! transition-all rounded-2xl! font-black h-14 border-2! shadow-sm placeholder:text-base-content/30!",
           startAdornment: (
             <InputAdornment position="start" className="pl-4">
-              <SearchIcon className="text-primary/40 group-v-focus-within:text-primary transition-colors h-6 w-6" />
+              <SearchIcon className="text-primary/40 group-focus-within:text-primary transition-colors h-6 w-6" />
             </InputAdornment>
           ),
         }}

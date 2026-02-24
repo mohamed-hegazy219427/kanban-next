@@ -78,7 +78,7 @@ const TaskCard = React.memo(
                   }}
                   className="btn btn-ghost btn-xs btn-square text-info hover:bg-info/10"
                 >
-                  <EditIcon sx={{ fontSize: 16 }} />
+                  <EditIcon sx={{ fontSize: 16 }} className="text-accent" />
                 </IconButton>
               )}
               {onDelete && (
@@ -90,7 +90,7 @@ const TaskCard = React.memo(
                   }}
                   className="btn btn-ghost btn-xs btn-square text-error hover:bg-error/10"
                 >
-                  <DeleteIcon sx={{ fontSize: 16 }} />
+                  <DeleteIcon sx={{ fontSize: 16 }} className="text-error"/>
                 </IconButton>
               )}
             </div>

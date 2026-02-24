@@ -8,6 +8,9 @@ type CreateTaskDialogProps = {
   onCreate: (payload: {
     title: string;
     description: string;
+    priority: "low" | "medium" | "high";
+    assignee: string;
+    tags: string;
   }) => Promise<void> | void;
 };
 
@@ -19,6 +22,9 @@ export default function CreateTaskDialog({
   const handleSubmit = async (values: {
     title: string;
     description: string;
+    priority: "low" | "medium" | "high";
+    assignee: string;
+    tags: string;
   }) => {
     await onCreate(values);
     onClose();
@@ -28,7 +34,13 @@ export default function CreateTaskDialog({
     <TaskFormDialog
       open={open}
       onClose={onClose}
-      initial={{ title: "", description: "" }}
+      initial={{
+        title: "",
+        description: "",
+        priority: "medium",
+        assignee: "",
+        tags: "",
+      }}
       onSubmit={handleSubmit}
       title="Create Task"
     />

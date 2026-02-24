@@ -23,7 +23,10 @@ const TaskCard = React.memo(
       isDragging,
     } = useSortable({
       id: String(task.id),
-      data: task,
+      data: {
+        type: "Task",
+        task,
+      },
       disabled: isOverlay,
     });
 
@@ -137,6 +140,19 @@ const TaskCard = React.memo(
                 {task.assignee}
               </div>
             )}
+            {task.tags &&
+              task.tags.split(",").map((tag, idx) => {
+                const trimmedTag = tag.trim();
+                if (!trimmedTag) return null;
+                return (
+                  <div
+                    key={idx}
+                    className="badge badge-neutral badge-outline badge-xs px-1 text-[8px] opacity-40 uppercase font-black tracking-widest"
+                  >
+                    # {trimmedTag}
+                  </div>
+                );
+              })}
           </div>
 
           <div className="flex items-center justify-between mt-1 pt-3 border-t border-base-content/5 text-[9px] text-base-content/30 font-black uppercase tracking-widest">

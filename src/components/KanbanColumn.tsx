@@ -59,10 +59,12 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   const handleCreate = async (payload: {
     title: string;
     description: string;
+    priority: "low" | "medium" | "high";
+    assignee: string;
+    tags: string;
   }) => {
     await createTask.mutateAsync({
-      title: payload.title,
-      description: payload.description,
+      ...payload,
       column,
       order:
         tasks.length > 0 ? Math.max(...tasks.map((t: Task) => t.order)) + 1 : 0,
@@ -75,14 +77,17 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   };
 
   const handleEditSave = async (payload: {
+    id: number | string;
     title: string;
     description: string;
+    priority: "low" | "medium" | "high";
+    assignee: string;
+    tags: string;
   }) => {
     if (!editTask) return;
     await updateTask.mutateAsync({
       ...editTask,
-      title: payload.title,
-      description: payload.description,
+      ...payload,
       updatedAt: new Date().toISOString(),
     });
     setOpenEdit(false);

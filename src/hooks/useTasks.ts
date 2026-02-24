@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { api } from "@/lib/api";
 import {
   useInfiniteQuery,
@@ -14,12 +15,10 @@ export function useTasks(column: string, search = "") {
   const fetcher = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const params = new URLSearchParams({
       _page: String(pageParam),
-      _per_page: String(PAGE_SIZE), // v1.0.0-beta.3 uses _per_page
+      _per_page: String(PAGE_SIZE),
       _sort: "order",
       column,
     });
-
-    if (search) params.set("title_like", search);
 
     // json-server 1.0.0-beta.3 returns { data: Task[], items: number, ... }
     const res = await api.get<{ data: Task[]; items: number }>(
@@ -35,12 +34,32 @@ export function useTasks(column: string, search = "") {
     };
   };
 
-  return useInfiniteQuery({
-    queryKey: ["tasks", column, search],
+  const query = useInfiniteQuery({
+    queryKey: ["tasks", column],
     queryFn: fetcher,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
+
+  // Client-side filtering by title (json-server beta doesn't support server-side search with pagination)
+  const filteredData = useMemo(() => {
+    if (!query.data || !search) return query.data;
+    const lowerSearch = search.toLowerCase();
+    return {
+      ...query.data,
+      pages: query.data.pages.map((page) => ({
+        ...page,
+        items: page.items.filter((task) =>
+          task.title.toLowerCase().includes(lowerSearch),
+        ),
+      })),
+    };
+  }, [query.data, search]);
+
+  return {
+    ...query,
+    data: filteredData,
+  };
 }
 
 // ========== Mutations ==========

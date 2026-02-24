@@ -35,11 +35,11 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   } = useTasks(column, search);
 
   const tasks = useMemo(
-    () => data?.pages.flatMap((p) => p.items) ?? [],
+    () => data?.pages.flatMap((p: { items: Task[] }) => p.items) ?? [],
     [data],
   );
 
-  const taskIds = useMemo(() => tasks.map((t) => String(t.id)), [tasks]);
+  const taskIds = useMemo(() => tasks.map((t: Task) => String(t.id)), [tasks]);
 
   const createTask = useCreateTask();
   const updateTask = useUpdateTask();
@@ -61,7 +61,8 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
       title: payload.title,
       description: payload.description,
       column,
-      order: tasks.length > 0 ? Math.max(...tasks.map((t) => t.order)) + 1 : 0,
+      order:
+        tasks.length > 0 ? Math.max(...tasks.map((t: Task) => t.order)) + 1 : 0,
     });
   };
 
@@ -135,7 +136,7 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
 
     return (
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-        {tasks.map((task) => (
+        {tasks.map((task: Task) => (
           <TaskCard
             key={`task-${task.id}`}
             task={task}

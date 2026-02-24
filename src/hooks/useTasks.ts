@@ -6,17 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-
-export interface Task {
-  id: number;
-  title: string;
-  description?: string;
-  column: "backlog" | "in-progress" | "review" | "done";
-  priority?: "low" | "medium" | "high";
-  assignee?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { Task, CreateTaskPayload, UpdateTaskPayload } from "@/types";
 
 const PAGE_SIZE = 10;
 
@@ -24,18 +14,22 @@ export function useTasks(column: string, search = "") {
   const fetcher = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const params = new URLSearchParams({
       _page: String(pageParam),
-      _limit: String(PAGE_SIZE),
+      _per_page: String(PAGE_SIZE), // v1.0.0-beta.3 uses _per_page
+      _sort: "order",
       column,
     });
 
     if (search) params.set("q", search);
 
-    const res = await api.get<Task[]>(`/tasks?${params.toString()}`);
-    console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
-    const total = Number(res.headers["x-total-count"] || 0);
+    // json-server 1.0.0-beta.3 returns { data: Task[], items: number, ... }
+    const res = await api.get<{ data: Task[]; items: number }>(
+      `/tasks?${params.toString()}`,
+    );
+
+    const { data: items, items: total } = res.data;
 
     return {
-      items: res.data,
+      items,
       nextPage: pageParam * PAGE_SIZE < total ? pageParam + 1 : undefined,
       total,
     };
@@ -54,7 +48,7 @@ export function useTasks(column: string, search = "") {
 export function useCreateTask() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (newTask: Partial<Task>) => api.post("/tasks", newTask),
+    mutationFn: (newTask: CreateTaskPayload) => api.post("/tasks", newTask),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["tasks"] }),
   });
 }
@@ -62,8 +56,25 @@ export function useCreateTask() {
 export function useUpdateTask() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (task: Task) => api.put(`/tasks/${task.id}`, task),
+    mutationFn: (task: UpdateTaskPayload) => api.put(`/tasks/${task.id}`, task),
+    onMutate: async (updatedTask) => {
+      // Cancel any outgoing refetches
+      await qc.cancelQueries({ queryKey: ["tasks"] });
+
+      // Snapshot the previous value
+      const previousTasks = qc.getQueryData(["tasks"]);
+
+      // Optimistically update to the new value
+      // This is a simplified version; in a real app, you'd find and replace the specific task
+      // across all relevant infinite query pages.
+      return { previousTasks };
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["tasks"] }),
+    onError: (err, updatedTask, context) => {
+      if (context?.previousTasks) {
+        qc.setQueryData(["tasks"], context.previousTasks);
+      }
+    },
   });
 }
 

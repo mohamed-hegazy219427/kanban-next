@@ -1,202 +1,191 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "title": "Design homepage",
-      "description": "Include hero section and responsive layout",
-      "column": "review",
-      "priority": "high",
-      "assignee": "Ali",
-      "createdAt": "2025-10-30T09:00:00Z",
-      "updatedAt": "2025-11-02T16:44:41.681Z",
-      "progress": 0.3
-    },
-    {
-      "id": "3",
-      "title": "PR review",
-      "description": "Check tests and code style before merging",
-      "column": "review",
-      "priority": "medium",
-      "assignee": "Sara",
-      "createdAt": "2025-10-28T10:00:00Z",
-      "updatedAt": "2025-11-02T09:43:46.011Z",
-      "progress": 0.6
-    },
-    {
-      "id": "4",
-      "title": "Deploy to prod",
-      "description": "Deploy final version to Vercel",
-      "column": "in-progress",
-      "priority": "medium",
-      "assignee": "Khaled",
-      "createdAt": "2025-10-25T08:00:00Z",
-      "updatedAt": "2025-11-02T20:55:14.228Z",
-      "progress": 0.7
-    },
-    {
-      "id": "5",
-      "title": "Set up database",
-      "description": "Configure PostgreSQL and Prisma models",
-      "column": "review",
-      "priority": "high",
-      "assignee": "Mohamed",
-      "createdAt": "2025-10-27T09:30:00Z",
-      "updatedAt": "2025-11-02T16:08:47.116Z",
-      "progress": 0.8
-    },
-    {
-      "id": "6",
+      "id": 1,
       "title": "Implement search",
       "description": "Add search functionality to tasks board",
       "column": "backlog",
       "priority": "medium",
       "assignee": "Ali",
+      "order": 1,
       "createdAt": "2025-10-29T14:00:00Z",
-      "updatedAt": "2025-11-02T09:41:45.787Z",
-      "progress": 0.8
+      "updatedAt": "2025-11-02T09:41:45.787Z"
     },
     {
-      "id": "7",
-      "title": "Write unit tests",
-      "description": "Cover core components with Jest + RTL",
-      "column": "in-progress",
-      "priority": "high",
-      "assignee": "Sara",
-      "createdAt": "2025-10-28T12:30:00Z",
-      "updatedAt": "2025-11-02T20:55:19.353Z",
-      "progress": 0.9
-    },
-    {
-      "id": "8",
-      "title": "Optimize images",
-      "description": "Compress for web and use Next/Image",
-      "column": "review",
-      "priority": "low",
-      "assignee": "Omar",
-      "createdAt": "2025-10-24T09:30:00Z",
-      "updatedAt": "2025-11-02T09:41:37.435Z",
-      "progress": 0.1
-    },
-    {
-      "id": "9",
-      "title": "Create user profiles2",
-      "description": "Design profile page with editable bio",
-      "column": "in-progress",
-      "priority": "medium",
-      "assignee": "Fatma",
-      "createdAt": "2025-10-26T11:00:00Z",
-      "updatedAt": "2025-11-02T16:44:27.170Z",
-      "progress": 0.7
-    },
-    {
-      "id": "10",
+      "id": 2,
       "title": "Add sorting",
       "description": "Add sorting functionality to tasks board",
       "column": "backlog",
       "priority": "medium",
       "assignee": "Mohamed",
+      "order": 2,
       "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
+      "updatedAt": "2025-11-02T09:38:20.596Z"
     },
     {
-      "id": "11",
+      "id": 3,
       "title": "Add filtering",
       "description": "Add filtering functionality to tasks board",
       "column": "backlog",
       "priority": "medium",
       "assignee": "Mohamed",
+      "order": 3,
       "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
+      "updatedAt": "2025-11-02T09:38:20.596Z"
     },
     {
-      "id": "12",
+      "id": 4,
       "title": "Add drag and drop",
       "description": "Add drag and drop functionality to tasks board",
       "column": "backlog",
       "priority": "medium",
       "assignee": "Mohamed",
+      "order": 4,
       "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
+      "updatedAt": "2025-11-02T09:38:20.596Z"
     },
     {
-      "id": "13",
-      "title": "Add sorting to tasks",
-      "description": "Add sorting functionality to tasks board",
-      "column": "backlog",
-      "priority": "medium",
-      "assignee": "Mohamed",
-      "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
-    },
-    {
-      "id": "14",
-      "title": "Add filtering to tasks",
-      "description": "Add filtering functionality to tasks board",
-      "column": "backlog",
-      "priority": "medium",
-      "assignee": "Mohamed",
-      "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
-    },
-    {
-      "id": "15",
-      "title": "Add drag and drop to tasks",
-      "description": "Add drag and drop functionality to tasks board",
-      "column": "backlog",
-      "priority": "medium",
-      "assignee": "Mohamed",
-      "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
-    },
-    {
-      "id": "16",
-      "title": "Add sorting to tasks",
-      "description": "Add sorting functionality to tasks board",
+      "id": 5,
+      "title": "Deploy to prod",
+      "description": "Deploy final version to Vercel",
       "column": "in-progress",
       "priority": "medium",
-      "assignee": "Mohamed",
-      "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
+      "assignee": "Khaled",
+      "order": 1,
+      "createdAt": "2025-10-25T08:00:00Z",
+      "updatedAt": "2025-11-02T20:55:14.228Z"
     },
     {
-      "id": "17",
-      "title": "Add filtering to tasks",
-      "description": "Add filtering functionality to tasks board",
+      "id": 6,
+      "title": "Write unit tests",
+      "description": "Cover core components with Jest + RTL",
+      "column": "in-progress",
+      "priority": "high",
+      "assignee": "Sara",
+      "order": 2,
+      "createdAt": "2025-10-28T12:30:00Z",
+      "updatedAt": "2025-11-02T20:55:19.353Z"
+    },
+    {
+      "id": 7,
+      "title": "Create user profiles",
+      "description": "Design profile page with editable bio",
+      "column": "in-progress",
+      "priority": "medium",
+      "assignee": "Fatma",
+      "order": 3,
+      "createdAt": "2025-10-26T11:00:00Z",
+      "updatedAt": "2025-11-02T16:44:27.170Z"
+    },
+    {
+      "id": 8,
+      "title": "Design homepage",
+      "description": "Include hero section and responsive layout",
+      "column": "review",
+      "priority": "high",
+      "assignee": "Ali",
+      "order": 1,
+      "createdAt": "2025-10-30T09:00:00Z",
+      "updatedAt": "2025-11-02T16:44:41.681Z"
+    },
+    {
+      "id": 9,
+      "title": "PR review",
+      "description": "Check tests and code style before merging",
       "column": "review",
       "priority": "medium",
-      "assignee": "Mohamed",
-      "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
+      "assignee": "Sara",
+      "order": 2,
+      "createdAt": "2025-10-28T10:00:00Z",
+      "updatedAt": "2025-11-02T09:43:46.011Z"
     },
     {
-      "id": "18",
-      "title": "Add drag and drop to tasks",
-      "description": "Add drag and drop functionality to tasks board",
-      "column": "done",
-      "priority": "medium",
+      "id": 10,
+      "title": "Set up database",
+      "description": "Configure PostgreSQL and Prisma models",
+      "column": "review",
+      "priority": "high",
       "assignee": "Mohamed",
-      "createdAt": "2025-10-27T10:00:00Z",
-      "updatedAt": "2025-11-02T09:38:20.596Z",
-      "progress": 0.8
+      "order": 3,
+      "createdAt": "2025-10-27T09:30:00Z",
+      "updatedAt": "2025-11-02T16:08:47.116Z"
     },
     {
-      "id": "19",
+      "id": 11,
+      "title": "Optimize images",
+      "description": "Compress for web and use Next/Image",
+      "column": "review",
+      "priority": "low",
+      "assignee": "Omar",
+      "order": 4,
+      "createdAt": "2025-10-24T09:30:00Z",
+      "updatedAt": "2025-11-02T09:41:37.435Z"
+    },
+    {
+      "id": 12,
       "title": "Implement dark mode",
       "description": "Add dark mode toggle and styles",
       "column": "done",
       "priority": "low",
       "assignee": "Omar",
+      "order": 1,
       "createdAt": "2025-10-24T09:30:00Z",
-      "updatedAt": "2025-11-02T09:37:25.155Z",
-      "progress": 1
+      "updatedAt": "2025-11-02T09:37:25.155Z"
+    },
+    {
+      "id": 13,
+      "title": "Add drag and drop to tasks",
+      "description": "Add drag and drop functionality to tasks board",
+      "column": "done",
+      "priority": "medium",
+      "assignee": "Mohamed",
+      "order": 2,
+      "createdAt": "2025-10-27T10:00:00Z",
+      "updatedAt": "2025-11-02T09:38:20.596Z"
+    },
+    {
+      "id": 14,
+      "title": "Refactor API layer",
+      "description": "Move API logic to dedicated service classes",
+      "column": "backlog",
+      "priority": "high",
+      "assignee": "Khaled",
+      "order": 5,
+      "createdAt": "2026-02-24T12:00:00Z",
+      "updatedAt": "2026-02-24T12:00:00Z"
+    },
+    {
+      "id": 15,
+      "title": "Update Documentation",
+      "description": "Complete README with new UI components summary",
+      "column": "in-progress",
+      "priority": "low",
+      "assignee": "Ali",
+      "order": 4,
+      "createdAt": "2026-02-24T13:00:00Z",
+      "updatedAt": "2026-02-24T13:00:00Z"
+    },
+    {
+      "id": 16,
+      "title": "Fix theme bug",
+      "description": "Ensure theme persists across browser tabs",
+      "column": "review",
+      "priority": "medium",
+      "assignee": "Sara",
+      "order": 5,
+      "createdAt": "2026-02-24T14:00:00Z",
+      "updatedAt": "2026-02-24T14:00:00Z"
+    },
+    {
+      "id": 17,
+      "title": "Verify DaisyUI build",
+      "description": "Check for unused styles in production build",
+      "column": "done",
+      "priority": "medium",
+      "assignee": "Fatma",
+      "order": 3,
+      "createdAt": "2026-02-24T15:00:00Z",
+      "updatedAt": "2026-02-24T15:00:00Z"
     }
   ]
 }

@@ -1,87 +1,112 @@
-# Kanban-Next
-A Kanban-style interactive task management dashboard built with Next.js, React Query, Redux Toolkit, MUI, Tailwind CSS, and DnD Kit.
+# 📋 Kanban-Next (Senior Edition)
 
-Live Preview & Demo: [Add your deployed link here]
+A high-performance, senior-level Kanban-style interactive task management dashboard. Built with **Next.js 16 (App Router)**, **React Query**, **Redux Toolkit**, **MUI**, and **DnD Kit Sortable**.
 
----
-
-## Features
-- Four Kanban columns: **Backlog**, **In Progress**, **Review**, and **Done**
-- Create, Edit, Delete tasks with a modal-based UI
-- Drag-and-drop tasks between columns (via DnD Kit)
-- Pagination per column (via React Query "infinite" queries)
-- Full-text search across tasks by title or description
-- URL-search parameter integration (`?search=...`)
-- React Query caching and automatic invalidation on mutation
-- Tailwind + MUI styling, TypeScript, Redux for UI state, json-server mock API for ease of development
+![Kanban Dashboard Preview](https://via.placeholder.com/1200x600?text=Kanban+Board+Preview)
 
 ---
 
-## Tech Stack
-| Layer           | Technology               |
-|------------------|--------------------------|
-| Framework        | Next.js (App Router)     |
-| Language         | TypeScript               |
-| UI Library       | Material UI + Tailwind CSS |
-| State Management | Redux Toolkit            |
-| Server State     | React Query              |
-| Drag & Drop      | DnD Kit                  |
-| Mock API         | json-server + `db.json`  |
+## 🚀 Advanced Features
+
+- **🔄 Persistent In-Column Sorting**: Integrated `@dnd-kit/sortable` for fluid reordering within the same column and between columns.
+- **⚡ Optimistic UI Updates**: Instant feedback on task moves and deletions using React Query's `onMutate` patterns.
+- **🏗️ Modern Architecture**:
+  - **Centralized Type System**: Type-safe development with a dedicated `src/types` layer.
+  - **API Interceptors**: Global Axios interceptors for centralized error logging and handling.
+  - **Infinite Scrolling**: Paginated data fetching per column to handle large datasets efficiently.
+- **🎨 Premium UI/UX**:
+  - **Loading Skeletons**: Reduced layout shift using themed MUI Skeletons.
+  - **Glassmorphism & Gradients**: Subtle, modern aesthetic with backdrop blurs and linear gradients.
+  - **Transition Effects**: Smooth CSS transitions on drag-over and state changes.
+- **🔍 Deep Search**: URL-synced search allows sharing filtered views effortlessly.
+- **♿ Accessibility**: Semantic HTML, ARIA labels, and keyboard-friendly interactions.
 
 ---
 
-## Project Structure
-The project is organized into the following folders:
+## 🛠️ Tech Stack
 
-* `src/`:
-	+ `app/`: Next.js pages and components
-		- `layout.tsx`: Root layout component
-		- `providers.tsx`: Redux, Query, and Theme providers
-		- `page.tsx`: Home page (KanbanBoard)
-	+ `components/`: Reusable UI components
-		- `KanbanBoard.tsx`
-		- `KanbanColumn.tsx`
-		- `TaskCard.tsx`
-		- `SearchBar.tsx`
-	+ `hooks/`: Custom React hooks
-		- `useTasks.ts`: CRUD + pagination for tasks
-		- `useSearchQuery.ts`: URL search param logic
-	+ `lib/`: Utilities and libraries
-		- `api.ts`: Axios instance for API requests
-		- `queryClient.ts`: React Query client
-	+ `store/`: Redux store and UI slice
-		- `index.ts`
-	+ `styles/`: Global CSS styles
-		- `globals.css`: Tailwind base styles
-	+ `db.json`: json-server mock API data
+| Layer                | Technology                                |
+| :------------------- | :---------------------------------------- |
+| **Framework**        | Next.js 16 (App Router)                   |
+| **Language**         | TypeScript                                |
+| **State Management** | Redux Toolkit (UI) + React Query (Server) |
+| **Styling**          | MUI v7 + Tailwind CSS v4                  |
+| **Drag & Drop**      | DnD Kit (Core + Sortable)                 |
+| **Networking**       | Axios + Interceptors                      |
+| **Mock API**         | JSON-Server                               |
 
-## Getting Started
+---
+
+## 📁 Project Structure
+
+```text
+src/
+├── app/               # Next.js App Router (Layouts, Providers, Pages)
+├── components/        # Reusable UI (Board, Columns, Cards, Dialogs)
+├── hooks/             # Custom Logic (useTasks, useSearchQuery)
+├── lib/               # Utilities (API client, QueryClient setup)
+├── store/             # Global UI State (Redux Toolkit)
+├── types/             # Centralized TypeScript Definitions
+└── styles/            # CSS Configuration (Tailwind, Globals)
+```
+
+---
+
+## 🏃 Getting Started
+
 ### Prerequisites
+
 - Node.js v18+
 - npm or yarn
-- (Optional) `json-server` globally installed
 
+### Installation & Run
 
-### Setup & Run  
+1. **Clone & Install**
+
+   ```bash
+   git clone https://github.com/mohamed-hegazy219427/kanban-next.git
+   cd kanban-next
+   npm install
+   ```
+
+2. **Run All-in-One (Recommended)**
+   The easiest way to run both the frontend and the mock backend server:
+
+   ```bash
+   npm run dev:all
+   ```
+
+3. **Manual Run (Separate Terminals)**
+
+   **Terminal 1 (Backend Server):**
+
+   ```bash
+   # Use npx if json-server is not installed globally
+   npx json-server --watch db.json --port 4000
+   ```
+
+   _Note: If you have issues with global installation, `npm run server` also works._
+
+   **Terminal 2 (Frontend App):**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Visit** [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🧪 Verification & Linting
+
+To ensure code quality and consistency:
+
 ```bash
-# 1. Clone this repository
-git clone https://github.com/mohamed-hegazy219427/kanban-next.git
-cd kanban-next
+npm run lint
+```
 
-# 2. Install dependencies
-npm install
-# or
-yarn install
+---
 
-# 3. Start the json-server mock API (in one terminal)
-json-server --watch db.json --port 4000
+## 📝 License
 
-# 4. Add environment variable (in `.env.local`)
-NEXT_PUBLIC_API_URL=http://localhost:4000
-
-# 5. Run the dev server
-npm run dev
-# or
-yarn dev
-
-# 6. Visit http://localhost:3000 in your browser
+MIT

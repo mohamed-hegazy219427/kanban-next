@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -28,24 +27,50 @@ export default function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   return (
-    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="xs">
-      <DialogTitle>
-        {title}
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      fullWidth
+      maxWidth="xs"
+      PaperProps={{
+        className: "bg-base-100 rounded-3xl shadow-2xl border border-base-300",
+        style: { borderRadius: "1.5rem" },
+      }}
+    >
+      <DialogTitle className="flex justify-between items-center bg-base-200/50 px-6 py-4">
+        <Typography
+          component="span"
+          className="text-xl font-black text-base-content tracking-tight"
+        >
+          {title}
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={onCancel}
-          sx={{ position: "absolute", right: 8, top: 8 }}
+          className="btn btn-ghost btn-sm btn-circle text-base-content/50 hover:bg-base-300"
         >
-          <CloseIcon />
+          <CloseIcon sx={{ fontSize: 20 }} />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
+
+      <DialogContent className="px-6 py-8 bg-base-100 text-center">
+        <Typography className="text-base-content/70 font-medium leading-relaxed">
+          {message}
+        </Typography>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel}>Cancel</Button>
-        <Button onClick={onConfirm} color="error" variant="contained">
-          Delete
+
+      <DialogActions className="px-6 py-4 bg-base-200/30 gap-3 border-t border-base-200">
+        <Button
+          onClick={onCancel}
+          className="btn btn-ghost border-transparent hover:bg-base-300 font-black uppercase text-xs tracking-widest px-6"
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={onConfirm}
+          className="btn btn-error shadow-lg shadow-error/20 font-black uppercase text-xs tracking-widest px-8"
+        >
+          Confirm Delete
         </Button>
       </DialogActions>
     </Dialog>

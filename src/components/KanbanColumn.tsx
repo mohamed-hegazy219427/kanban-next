@@ -3,14 +3,25 @@
 import { useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
   useTasks,
   useCreateTask,
   useUpdateTask,
   useDeleteTask,
-  Task,
 } from "@/hooks/useTasks";
+import { Task } from "@/types";
 import TaskCard from "./TaskCard";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CreateTaskDialog from "./CreateTaskDialog";
 import EditTaskDialog from "./EditTaskDialog";
@@ -22,13 +33,6 @@ interface Props {
   search?: string;
 }
 
-const columnColors: Record<Props["column"], string> = {
-  backlog: "#66D9EF",
-  "in-progress": "#FFC107",
-  review: "#FF9900",
-  done: "#00E676",
-};
-
 export default function KanbanColumn({ column, title, search = "" }: Props) {
   const {
     data,
@@ -38,6 +42,8 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     isLoading,
     isError,
   } = useTasks(column, search);
+
+  // Flatten tasks from infinite query pages
   const tasks = data?.pages.flatMap((p) => p.items) ?? [];
 
   const createTask = useCreateTask();
@@ -48,13 +54,9 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
-
-  // keep your existing delete handler, but trigger confirm
- 
   const [editTask, setEditTask] = useState<Task | null>(null);
 
   const { setNodeRef, isOver } = useDroppable({ id: column });
-  const highlight = isOver ? "#D1E9FF" : columnColors[column];
 
   const handleCreate = async (payload: {
     title: string;
@@ -64,7 +66,7 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
       title: payload.title,
       description: payload.description,
       column,
-      createdAt: new Date().toISOString(),
+      order: tasks.length > 0 ? Math.max(...tasks.map((t) => t.order)) + 1 : 0,
     });
   };
 
@@ -87,74 +89,151 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     setOpenEdit(false);
   };
 
+  const askDelete = async (task: Task) => {
+    setTaskToDelete(task);
+    setOpenConfirm(true);
+  };
 
-   const askDelete = async (task: Task) => {
-     setTaskToDelete(task);
-     setOpenConfirm(true);
-    //  await deleteTask.mutateAsync(task.id);
+  const handleConfirmDelete = async () => {
+    if (!taskToDelete) return;
+    await deleteTask.mutateAsync(taskToDelete.id);
+    setOpenConfirm(false);
+    setTaskToDelete(null);
+  };
 
-   };
-
-   const handleConfirmDelete = async () => {
-     if (!taskToDelete) return;
-     await deleteTask.mutateAsync(taskToDelete.id);
-     setOpenConfirm(false);
-     setTaskToDelete(null);
-   };
-  
-
-  if (isLoading) return <div className="p-4 text-center">Loading...</div>;
   if (isError)
     return (
-      <div className="p-4 text-center text-red-500">Error loading tasks</div>
+      <Box className="alert alert-error shadow-lg rounded-2xl flex flex-col items-center text-center p-8">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="stroke-current shrink-0 h-8 w-8 mb-2"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span className="font-bold">Error loading tasks</span>
+        <Button
+          className="btn btn-sm btn-outline mt-4"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </Button>
+      </Box>
     );
 
-  return (
-    <div
-      ref={setNodeRef}
-      className="border rounded-2xl p-4 flex flex-col h-full transition-colors duration-200"
-      style={{ backgroundColor: highlight }}
-    >
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="font-semibold text-lg">{title}</h2>
-        <IconButton size="small" onClick={() => setOpenCreate(true)}>
-          <AddIcon />
-        </IconButton>
-      </div>
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Skeleton
+              key={i}
+              variant="rectangular"
+              className="skeleton h-32 w-full rounded-xl"
+            />
+          ))}
+        </div>
+      );
+    }
 
-      <div className="flex-1 space-y-2 overflow-y-auto">
+    return (
+      <SortableContext
+        items={tasks.map((t) => String(t.id))}
+        strategy={verticalListSortingStrategy}
+      >
         {tasks.map((task) => (
           <TaskCard
-            key={task.id}
+            key={`task-${task.id}`}
             task={task}
             onEdit={() => handleEditOpen(task)}
             onDelete={() => askDelete(task)}
           />
         ))}
+      </SortableContext>
+    );
+  };
+
+  const getHeaderColorClass = () => {
+    switch (column) {
+      case "backlog":
+        return "border-blue-500";
+      case "in-progress":
+        return "border-warning";
+      case "review":
+        return "border-secondary";
+      case "done":
+        return "border-success";
+      default:
+        return "border-base-300";
+    }
+  };
+
+  return (
+    <Box
+      ref={setNodeRef}
+      className={`flex flex-col h-full rounded-2xl bg-base-200/40 border-t-4 ${getHeaderColorClass()} shadow-sm transition-all duration-300 ${isOver ? "bg-base-300/60 ring-2 ring-primary/20" : ""}`}
+    >
+      <div className="flex justify-between items-center p-6 pb-4">
+        <div className="flex items-center gap-3">
+          <Typography
+            component="h2"
+            className="font-black text-xl text-base-content tracking-tight flex items-center gap-2 m-0 p-0"
+          >
+            {title}
+            <div className="badge badge-neutral badge-sm font-bold opacity-70">
+              {tasks.length}
+            </div>
+          </Typography>
+        </div>
+        <IconButton
+          onClick={() => setOpenCreate(true)}
+          className="btn btn-circle btn-xs btn-primary shadow-md hover:scale-110 transition-transform p-0!"
+          sx={{ minWidth: 24, padding: 0 }}
+        >
+          <AddIcon sx={{ fontSize: 16 }} />
+        </IconButton>
       </div>
 
-      <div className="mt-4 text-center">
-        {hasNextPage ? (
-          <Button
-            variant="outlined"
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-          >
-            {isFetchingNextPage ? <CircularProgress size={20} /> : "Load More"}
-          </Button>
+      <div className="flex-1 px-4 pb-4 space-y-4 overflow-y-auto scrollbar-hide min-h-[300px]">
+        {tasks.length === 0 && !isLoading ? (
+          <Box className="flex flex-col items-center justify-center p-12 opacity-20 text-center grayscale py-20">
+            <div className="w-16 h-16 border-4 border-dashed border-base-content rounded-full mb-4 animate-pulse"></div>
+            <p className="text-xs font-black uppercase tracking-widest">
+              No Tasks
+            </p>
+          </Box>
         ) : (
-          <p className="text-sm text-gray-400">No more tasks</p>
+          renderContent()
         )}
       </div>
 
-      {/* Create Dialog */}
+      {hasNextPage && (
+        <div className="p-4 pt-0 text-center">
+          <Button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="btn btn-ghost btn-xs w-full text-primary font-bold hover:bg-primary/10"
+          >
+            {isFetchingNextPage ? (
+              <CircularProgress size={12} className="text-primary mr-2" />
+            ) : null}
+            LOAD MORE
+          </Button>
+        </div>
+      )}
+
       <CreateTaskDialog
         open={openCreate}
         onClose={() => setOpenCreate(false)}
         onCreate={handleCreate}
       />
 
-      {/* Edit Dialog */}
       <EditTaskDialog
         open={openEdit}
         onClose={() => setOpenEdit(false)}
@@ -162,7 +241,6 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
         onEdit={handleEditSave}
       />
 
-      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         open={openConfirm}
         title="Delete Task"
@@ -177,6 +255,6 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
         }}
         onConfirm={handleConfirmDelete}
       />
-    </div>
+    </Box>
   );
 }

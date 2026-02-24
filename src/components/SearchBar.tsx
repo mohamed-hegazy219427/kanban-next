@@ -1,43 +1,31 @@
 "use client";
 
-import { TextField, InputAdornment, Paper } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { useSearchQuery } from "@/hooks/useSearchQuery";
+import { TextField, InputAdornment, Box } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 export default function SearchBar() {
   const { search, setSearch } = useSearchQuery();
 
   return (
-    <Paper elevation={0} className="p-4 mb-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+    <Box className="form-control w-full group">
       <TextField
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search tasks by title, description, assignee..."
-        variant="outlined"
-        size="medium"
+        placeholder="Quick search across tasks..."
+        variant="standard"
         fullWidth
         InputProps={{
+          disableUnderline: true,
+          className:
+            "input input-bordered w-full pr-12 bg-base-100 focus:input-primary transition-all rounded-[1.25rem] font-black h-14 border-2 shadow-sm group-v-focus-within:shadow-xl group-v-focus-within:shadow-primary/5 group-v-focus-within:ring-8 group-v-focus-within:ring-primary/5",
           startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon className="text-gray-400" />
+            <InputAdornment position="start" className="pl-4">
+              <SearchIcon className="text-primary/40 group-v-focus-within:text-primary transition-colors h-6 w-6" />
             </InputAdornment>
           ),
-          className: "bg-gray-50 rounded-lg",
-        }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "transparent",
-            },
-            "&:hover fieldset": {
-              borderColor: "#3b82f6",
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#3b82f6",
-            },
-          },
         }}
       />
-    </Paper>
+    </Box>
   );
 }

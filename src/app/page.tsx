@@ -4,14 +4,20 @@
 import { Suspense } from "react";
 import KanbanBoard from "../components/KanbanBoard";
 
+import { Box } from "@mui/material";
+
 export default function HomePage() {
   return (
     <Suspense
-      fallback={<div className="p-6 text-center">Loading board...</div>}
+      fallback={
+        <Box className="p-6 text-center font-bold text-base-content opacity-50">
+          Loading board...
+        </Box>
+      }
     >
-      <main className="min-h-screen bg-gray-50">
+      <Box component="main" className="min-h-screen bg-base-100">
         <KanbanBoard />
-      </main>
+      </Box>
     </Suspense>
   );
 }

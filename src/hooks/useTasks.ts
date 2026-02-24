@@ -58,24 +58,112 @@ export function useUpdateTask() {
   return useMutation({
     mutationFn: (task: UpdateTaskPayload) => api.put(`/tasks/${task.id}`, task),
     onMutate: async (updatedTask) => {
-      // Cancel any outgoing refetches
       await qc.cancelQueries({ queryKey: ["tasks"] });
 
-      // Snapshot the previous value
-      const previousTasks = qc.getQueryData(["tasks"]);
+      const queryKey = ["tasks"];
+      const previousData = qc.getQueriesData({ queryKey });
 
-      // Optimistically update to the new value
-      // This is a simplified version; in a real app, you'd find and replace the specific task
-      // across all relevant infinite query pages.
-      return { previousTasks };
+      // 1. Find the "full" task data from the cache before any changes
+      let fullTask: Task | null = null;
+      previousData.forEach(([_, data]: [any, any]) => {
+        if (!data) return;
+        data.pages.forEach((page: any) => {
+          const found = page.items.find(
+            (item: Task) => item.id === updatedTask.id,
+          );
+          if (found) fullTask = found;
+        });
+      });
+
+      if (!fullTask) return { previousData };
+
+      // 2. Apply optimistic updates with full data preservation
+      qc.setQueriesData({ queryKey }, (oldData: any, variables: any) => {
+        if (!oldData) return oldData;
+        const currentQueryColumn = variables[1];
+
+        // REMOVE logic
+        if (updatedTask.column && updatedTask.column !== currentQueryColumn) {
+          let removed = false;
+          const newPages = oldData.pages.map((page: any) => {
+            const filteredItems = page.items.filter(
+              (item: Task) => item.id !== updatedTask.id,
+            );
+            if (filteredItems.length < page.items.length) removed = true;
+            return {
+              ...page,
+              items: filteredItems,
+            };
+          });
+
+          if (!removed) return oldData;
+
+          return {
+            ...oldData,
+            pages: newPages.map((page: any, idx: number) =>
+              idx === 0
+                ? { ...page, total: Math.max(0, page.total - 1) }
+                : page,
+            ),
+          };
+        }
+
+        // ADD or UPDATE logic
+        if (
+          updatedTask.column === currentQueryColumn ||
+          (!updatedTask.column && fullTask?.column === currentQueryColumn)
+        ) {
+          const isTaskInThisQuery = taskFoundInThisQuery(
+            oldData,
+            updatedTask.id,
+          );
+
+          const newPages = oldData.pages.map((page: any, index: number) => {
+            let items = [...page.items];
+            const taskIndex = items.findIndex(
+              (item: Task) => item.id === updatedTask.id,
+            );
+
+            if (taskIndex !== -1) {
+              items[taskIndex] = { ...items[taskIndex], ...updatedTask };
+            } else if (index === 0) {
+              items.push({ ...fullTask, ...updatedTask });
+            }
+
+            items.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            return {
+              ...page,
+              items,
+              total:
+                index === 0 && !isTaskInThisQuery ? page.total + 1 : page.total,
+            };
+          });
+          return { ...oldData, pages: newPages };
+        }
+        return oldData;
+      });
+
+      return { previousData };
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["tasks"] }),
+    onSuccess: () => {
+      // Invalidation happens silently in background for ultimate smoothness
+      qc.invalidateQueries({ queryKey: ["tasks"], refetchType: "none" });
+    },
     onError: (err, updatedTask, context) => {
-      if (context?.previousTasks) {
-        qc.setQueryData(["tasks"], context.previousTasks);
+      if (context?.previousData) {
+        context.previousData.forEach(([key, data]) =>
+          qc.setQueryData(key, data),
+        );
       }
     },
   });
+}
+
+function taskFoundInThisQuery(data: any, id: number) {
+  return data.pages.some((page: any) =>
+    page.items.some((item: any) => item.id === id),
+  );
 }
 
 export function useDeleteTask() {

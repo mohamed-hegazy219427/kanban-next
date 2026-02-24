@@ -57,7 +57,7 @@ const TaskCard = React.memo(
         {...attributes}
         style={style}
         elevation={0}
-        className={`card card-compact bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 border border-base-200 group ${isDragging ? "opacity-50 ring-4 ring-primary ring-inset" : ""} active:scale-95`}
+        className={`card card-compact bg-base-100! shadow-lg hover:shadow-xl transition-all duration-300 border border-base-200 group ${isDragging ? "opacity-50 ring-4 ring-primary ring-inset" : ""} active:scale-95`}
         aria-label={`Task: ${task.title}`}
       >
         <CardContent className="card-body gap-4 p-5!">

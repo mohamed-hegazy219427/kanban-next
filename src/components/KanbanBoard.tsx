@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Container, Box, Typography } from "@mui/material";
 import {
   DndContext,
@@ -27,7 +27,7 @@ export default function KanbanBoard() {
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 8 },
+      activationConstraint: { distance: 5 },
     }),
   );
 
@@ -35,7 +35,7 @@ export default function KanbanBoard() {
     setActiveTask(event.active.data.current as Task);
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) {
       setActiveTask(null);
@@ -43,44 +43,74 @@ export default function KanbanBoard() {
     }
 
     const activeTaskData = active.data.current as Task;
-    const overId = over.id;
+    if (!activeTaskData) {
+      setActiveTask(null);
+      return;
+    }
 
-    // Detect target column: it's either the overId itself (if dropping on an empty column)
-    // or the column of the task we dropped over.
+    const overId = String(over.id);
     const overData = over.data.current;
-    const targetColumn = (
-      overData && "column" in overData ? overData.column : overId
-    ) as TaskColumn;
 
-    // 1. Handle moving between columns
-    if (activeTaskData.column !== targetColumn) {
-      // Basic move to end of column or specific spot
-      // For cross-column, we default to the end or the overTask's order if possible
+    let targetColumn: TaskColumn | null = null;
+    if (["backlog", "in-progress", "review", "done"].includes(overId)) {
+      targetColumn = overId as TaskColumn;
+    } else if (overData && "column" in overData) {
+      targetColumn = overData.column as TaskColumn;
+    }
+
+    if (!targetColumn) {
+      setActiveTask(null);
+      return;
+    }
+
+    if (activeTaskData.column !== targetColumn || active.id !== overId) {
       const newOrder =
         overData && "order" in overData
           ? (overData.order as number)
           : activeTaskData.order;
-
-      await updateTask.mutateAsync({
+      updateTask.mutate({
         ...activeTaskData,
         column: targetColumn,
         order: newOrder,
         updatedAt: new Date().toISOString(),
       });
     }
-    // 2. Handle reordering within the same column
-    else if (active.id !== overId) {
-      const overTaskData = overData as Task;
-      if (overTaskData && activeTaskData.column === overTaskData.column) {
-        await updateTask.mutateAsync({
-          ...activeTaskData,
-          order: overTaskData.order,
-          updatedAt: new Date().toISOString(),
-        });
-      }
-    }
 
     setActiveTask(null);
+  };
+
+  const handleDragOver = (event: any) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const overId = String(over.id);
+    const activeData = active.data.current as Task;
+    const overData = over.data.current;
+
+    if (!activeData) return;
+
+    let targetColumn: TaskColumn | null = null;
+    if (["backlog", "in-progress", "review", "done"].includes(overId)) {
+      targetColumn = overId as TaskColumn;
+    } else if (overData && "column" in overData) {
+      targetColumn = overData.column as TaskColumn;
+    }
+
+    if (!targetColumn) return;
+
+    // If hovering over a different column, update position optimistically
+    if (activeData.column !== targetColumn) {
+      const newOrder =
+        overData && "order" in overData ? (overData.order as number) : 0;
+      updateTask.mutate({
+        ...activeData,
+        column: targetColumn,
+        order: newOrder,
+        updatedAt: new Date().toISOString(),
+      });
+      // Update active data locally so subsequent over events know where it is now
+      active.data.current.column = targetColumn;
+    }
   };
 
   return (
@@ -88,6 +118,7 @@ export default function KanbanBoard() {
       sensors={sensors}
       collisionDetection={closestCorners}
       onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveTask(null)}
     >
@@ -135,9 +166,9 @@ export default function KanbanBoard() {
         </Container>
       </Box>
 
-      <DragOverlay>
+      <DragOverlay dropAnimation={null}>
         {activeTask ? (
-          <div className="rotate-3 opacity-95 scale-105 transition-transform duration-200">
+          <div className="z-100 opacity-90 scale-105 pointer-events-none">
             <TaskCard task={activeTask} isOverlay />
           </div>
         ) : null}

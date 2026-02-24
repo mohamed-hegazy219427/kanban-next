@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -44,7 +44,12 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
   } = useTasks(column, search);
 
   // Flatten tasks from infinite query pages
-  const tasks = data?.pages.flatMap((p) => p.items) ?? [];
+  const tasks = useMemo(
+    () => data?.pages.flatMap((p) => p.items) ?? [],
+    [data],
+  );
+
+  const taskIds = useMemo(() => tasks.map((t) => String(t.id)), [tasks]);
 
   const createTask = useCreateTask();
   const updateTask = useUpdateTask();
@@ -143,10 +148,7 @@ export default function KanbanColumn({ column, title, search = "" }: Props) {
     }
 
     return (
-      <SortableContext
-        items={tasks.map((t) => String(t.id))}
-        strategy={verticalListSortingStrategy}
-      >
+      <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
         {tasks.map((task) => (
           <TaskCard
             key={`task-${task.id}`}
